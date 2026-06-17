@@ -3,7 +3,7 @@ name: Update docs index
 on:
   push:
     paths:
-      - "docs/**"
+      - "pages/**"
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,12 @@ jobs:
         with:
           python-version: "3.x"
 
+      - name: Install dependencies
+        run: pip install requests
+
       - name: Generate index
+        env:
+          ORG_TOKEN: ${{ secrets.ORG_TOKEN }}
         run: python scripts/generate_index.py
       
       # debug1
@@ -51,6 +56,11 @@ jobs:
           git status
 
           git commit -m "Update index" || echo "No changes"
+
+          echo "==== AFTER COMMIT ===="
+          git status
+
+          git push
 
           echo "==== AFTER COMMIT ===="
           git status
